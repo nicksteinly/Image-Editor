@@ -1,0 +1,91 @@
+import cv2
+import numpy as np
+from PIL import Image
+from flask import Blueprint
+from flask import jsonify, request
+
+edge_detection_bp = Blueprint('edge_detection', __name__)
+
+@edge_detection_bp.route("/edge_detection_Canny", methods=["POST"])
+def edge_detection_Canny():
+    try:
+      data=request.json
+      image_path = data.get('imagePath')
+      # Read the image
+      image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+      # Apply Canny edge detection
+      edges = cv2.Canny(image, 100, 200)
+      output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/canny.png'
+      cv2.imwrite(output_image_path, edges)
+      return jsonify({'outputImagePath': output_image_path})
+    
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({'error': 'Canny Edge Detection Failed'})
+
+@edge_detection_bp.route("/outer_outline_detection", methods=["POST"])
+def outer_outline_detection():
+    # Read the image and convert it to grayscale
+    try:
+      data=request.json
+      image_path = data.get('imagePath')
+      image = cv2.imread(image_path)
+      gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+      # Apply GaussianBlur to reduce noise and improve edge detection
+      blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+
+      # Use Canny edge detection to find edges in the image
+      edges = cv2.Canny(blurred, 100, 200)
+
+      # Find contours in the edge-detected image
+      contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+      # Draw the outer contours on a blank canvas
+      outer_contours_img = np.zeros_like(image)
+      cv2.drawContours(outer_contours_img, contours, -1, (255, 255, 255), thickness=cv2.FILLED)
+
+      # Convert the image to grayscale
+      outer_contours_gray = cv2.cvtColor(outer_contours_img, cv2.COLOR_BGR2GRAY)
+
+      # Threshold the image to obtain binary outline
+      _, outer_outline = cv2.threshold(outer_contours_gray, 1, 255, cv2.THRESH_BINARY)
+      output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/outer-outline.png'
+      cv2.imwrite(output_image_path, outer_outline)
+      return jsonify({'outputImagePath': output_image_path})
+    
+    except Exception as e:
+      print("Error:", e)
+      return jsonify({'error': 'Outer Outline Detection Failed'})
+
+@edge_detection_bp.route('/thickened_edges', methods=['POST'])
+def thickened_edges():
+    try:
+        data = request.json
+        image_path = data.get('imagePath')
+        kernel_size = data.get('kernelSize')
+        iterations = data.get('iterations')
+
+        # Read the image and convert it to grayscale
+        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+        # Apply Canny edge detection
+        edges = cv2.Canny(image, 100, 200)
+
+        # Create a kernel for dilation
+        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+
+        # Dilate the edges to thicken them
+        thick_edges = cv2.dilate(edges, kernel, iterations=iterations)
+
+        # Convert NumPy ndarray to list for JSON serialization
+        thick_edges_list = thick_edges.tolist()
+        output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/thickened.png'
+        cv2.imwrite(output_image_path, thick_edges)
+        return jsonify({'outputImagePath': output_image_path})
+
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({'error': 'Thicken Edges Failed'})
+
