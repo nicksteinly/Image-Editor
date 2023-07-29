@@ -28,4 +28,52 @@ export class RecolorationController{
     }
   }
 
+  async filter_out_color({inputImagePath, targetColor, threshold}) {
+    try {
+      const response = await fetch(`${this.baseURL}/filter_out_color`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+        body: JSON.stringify({ inputImagePath: inputImagePath, targetColor: targetColor, threshold: threshold }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+  
+      const data = await response.json();
+      return data.outputImagePath;
+
+    } catch (error) {
+      console.error('Error:', error);
+      throw error; 
+    }
+  }
+
+  async filter_by_color({inputImagePath, targetColor, threshold}) {
+    try {
+      const response = await fetch(`${this.baseURL}/filter_by_color`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+        body: JSON.stringify({ inputImagePath: inputImagePath, targetColor: targetColor, threshold: threshold }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+  
+      const data = await response.json();
+      return data.outputImagePath;
+
+    } catch (error) {
+      console.error('Error:', error);
+      throw error; 
+    }
+  }
+
 }
