@@ -8,6 +8,23 @@ recoloration_bp = Blueprint('recoloration', __name__)
 
 @recoloration_bp.route('/recolor_white_pixels', methods=["POST"])
 def recolor_white_pixels():
+    """
+    Recolor white pixels in the input image to a specified color.
+
+    Input JSON:
+    {
+        "inputImagePath": "path/to/input/image.png",
+        "hexColor": "#RRGGBB"
+    }
+
+    The function replaces all white pixels (RGB value [255, 255, 255]) in the input image with the color specified
+    by 'hexColor'. The target color should be given in hex format (e.g., "#RRGGBB").
+
+    Output JSON:
+    {
+        "outputImagePath": "path/to/output/image.png"
+    }
+    """
     try:
       data = request.json
       image_path = data.get('inputImagePath')
@@ -29,21 +46,34 @@ def recolor_white_pixels():
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'White Pixels to Color Failed'})
-    
-def hex_to_bgr(hex_color):
-    # Convert hex color (e.g., "#RRGGBB") to BGR format (OpenCV uses BGR instead of RGB)
-    r = int(hex_color[1:3], 16)
-    g = int(hex_color[3:5], 16)
-    b = int(hex_color[5:7], 16)
-    return [b, g, r]  # OpenCV uses BGR format
 
 @recoloration_bp.route('/filter_out_color', methods=['POST'])
 def filter_out_color():
+    """
+    Filter out colors similar to the target color from the input image.
+
+    Input JSON:
+    {
+        "inputImagePath": "path/to/input/image.png",
+        "targetColor": "#RRGGBB",
+        "threshold": 30
+    }
+
+    The function creates a mask by comparing each pixel's color in the input image with the specified 'targetColor'.
+    If the Euclidean distance between a pixel's color and the 'targetColor' is less than or equal to 'threshold',
+    the pixel is considered similar to the target color and is filtered out. A higher 'threshold' value results in
+    a more lenient filtering, preserving more colors in the output image.
+
+    Output JSON:
+    {
+        "outputImagePath": "path/to/output/image.png"
+    }
+    """
     try:
         data = request.json
         image_path = data.get('inputImagePath')
         target_color_hex = data.get('targetColor')
-        threshold = data.get('threshold')
+        threshold = data.get('threshold',30)
 
         # Convert the target color from hex to BGR format
         target_color_bgr = hex_to_bgr(target_color_hex)
@@ -76,6 +106,26 @@ def filter_out_color():
 
 @recoloration_bp.route('/filter_by_color', methods=['POST'])
 def filter_by_color():
+    """
+    Filter the input image to keep only colors similar to the target color.
+
+    Input JSON:
+    {
+        "inputImagePath": "path/to/input/image.png",
+        "targetColor": "#RRGGBB",
+        "threshold": 30
+    }
+
+    The function creates a mask by comparing each pixel's color in the input image with the specified 'targetColor'.
+    If the Euclidean distance between a pixel's color and the 'targetColor' is less than or equal to 'threshold',
+    the pixel is kept in the output image; otherwise, it is filtered out. A higher 'threshold' value results in a
+    more lenient filtering, retaining more colors in the output image that are within the target threshold.
+
+    Output JSON:
+    {
+        "outputImagePath": "path/to/output/image.png"
+    }
+    """
     try:
         data = request.json
         input_image_path = data.get('inputImagePath')
@@ -108,3 +158,11 @@ def filter_by_color():
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'Filtering by color failed'})
+    
+
+def hex_to_bgr(hex_color):
+  # Convert hex color (e.g., "#RRGGBB") to BGR format (OpenCV uses BGR instead of RGB)
+  r = int(hex_color[1:3], 16)
+  g = int(hex_color[3:5], 16)
+  b = int(hex_color[5:7], 16)
+  return [b, g, r]  # OpenCV uses BGR format

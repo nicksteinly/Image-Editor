@@ -20,8 +20,8 @@ export const ImageSpaceComponent = () => {
     const thickEdgesPath = await edgeDetectionController.thickenEdges({inputImagePath: cannyEdgePath, kernelSize: 5, iterations: 1});
     const recoloration = await recolorationController.recolor_white_pixels({inputImagePath: thickEdgesPath, color: '0F52BA'});
     const outputImagePath2 = await backgroundRemovalController.removeBlackBackground({inputImagePath: recoloration});
-    const removeColor = await recolorationController.filter_out_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: 200});
-    const filter_by_color = await recolorationController.filter_by_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: 200});
+    const removeColor = await recolorationController.filter_out_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: .5});
+    const filter_by_color = await recolorationController.filter_by_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: 100});
   }
 
 return (
