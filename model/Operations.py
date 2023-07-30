@@ -151,6 +151,7 @@ def call_operation():
 
             param_values.append(image_input)
             # Call the function with the parameter values
+
             image_input , result_image_encoded = corresponding_function(*param_values)
             #TODO change to numpy and use .tolist() to send in json
             result_image_list.append(result_image_encoded)

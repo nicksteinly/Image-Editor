@@ -30,12 +30,13 @@ export const OperationProvider = ({ children }) => {
     fetchData();
   }, []); // Empty dependency array means this will run only once on mount
 
-  const addOperation = ({operationName, operationJSON, paramValues}) => {
+  const addOperation = ({operationName, operationJSON, paramValues, setParamValues}) => {
     for (const [paramName, paramValue] of Object.entries(paramValues)) {
       operationJSON.parameters[paramName] = paramValue;
     }
     setAddedOperations([...addedOperations, operationName]);
     setAddedOperationsJSON([...addedOperationsJSON, operationJSON]);
+    setParamValues({});
     console.log(addedOperationsJSON);
     console.log(operationJSON);
   };

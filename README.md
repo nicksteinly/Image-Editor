@@ -4,7 +4,7 @@ Computer Vision based image editor
 
 TODO:
 
-- fix/investigate bug with shifting input values after doing an image operation
+- some images work for returning the parameter dependent operations other throw "cannot unpack non-iterable Response object"
 - fix the file/path assumption in Operations.py
 - test all parameters inputs for operations
 - fix the remove operation bug

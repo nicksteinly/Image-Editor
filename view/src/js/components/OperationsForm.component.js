@@ -31,7 +31,7 @@ export const OperationForm = () => {
               </li>
             ))}
           </ul>
-          <button onClick={() => addOperation({operationName: operation?.name, operationJSON: operation, paramValues: paramValues})}>Add</button>
+          <button onClick={() => addOperation({operationName: operation?.name, operationJSON: operation, paramValues: paramValues, setParamValues: setParamValues})}>Add</button>
         </div>
       ))}
     </div>
