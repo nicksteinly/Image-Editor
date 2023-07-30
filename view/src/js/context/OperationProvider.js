@@ -12,7 +12,7 @@ export const OperationProvider = ({ children }) => {
   const operationsController = new OperationsController(operationBaseURL);
   const [operations, setOperations] = useState([]);
   const [addedOperations, setAddedOperations] = useState([]);
-  const [addedOperationsJSON, setAddedOperationsJSON] = useState({});
+  const [addedOperationsJSON, setAddedOperationsJSON] = useState([]);
 
   useEffect(() => {
     // Define an asynchronous function inside useEffect
@@ -34,9 +34,10 @@ export const OperationProvider = ({ children }) => {
     for (const [paramName, paramValue] of Object.entries(paramValues)) {
       operationJSON.parameters[paramName] = paramValue;
     }
-    console.log(operationJSON);
     setAddedOperations([...addedOperations, operationName]);
-    setAddedOperationsJSON(operationJSON);
+    setAddedOperationsJSON([...addedOperationsJSON, operationJSON]);
+    console.log(addedOperationsJSON);
+    console.log(operationJSON);
   };
 
   const removeOperation = (index) => {

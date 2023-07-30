@@ -21,7 +21,7 @@ def edge_detection_Canny(image_path):
       cv2.imwrite(output_image_path, edges)
       _, encoded_image = cv2.imencode('.png', edges)
       base64_string = base64.b64encode(encoded_image).decode('utf-8')
-      return jsonify({'outputImage': base64_string})
+      return base64_string
     
     except Exception as e:
         print("Error:", e)
@@ -58,7 +58,7 @@ def outer_outline_detection(image_path):
       cv2.imwrite(output_image_path, outer_outline)
       _, encoded_image = cv2.imencode('.png', outer_outline)
       base64_string = base64.b64encode(encoded_image).decode('utf-8')
-      return jsonify({'outputImage': base64_string})
+      return base64_string
     
     except Exception as e:
       print("Error:", e)
@@ -90,7 +90,7 @@ def thickened_edges(image_path, iterations, kernel_size):
         cv2.imwrite(output_image_path, thick_edges)
         _, encoded_image = cv2.imencode('.png', thick_edges)
         base64_string = base64.b64encode(encoded_image).decode('utf-8')
-        return jsonify({'outputImage': base64_string})
+        return base64_string
 
     except Exception as e:
         print("Error:", e)

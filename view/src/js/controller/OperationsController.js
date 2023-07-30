@@ -100,14 +100,15 @@ export class OperationsController{
           'Content-Type': 'application/json',
         },
         withCredentials: true,
-        body: JSON.stringify({'operations': [operationsJSON]}),
+        body: JSON.stringify({'operations': operationsJSON}),
       });
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
 
       const data = await response.json();
-      return data?.outputImage;
+      console.log(data)
+      return data?.outputImages;
     } catch (error) {
       console.error('Error:', error);
       throw error; 

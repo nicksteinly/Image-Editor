@@ -45,7 +45,7 @@ def recolor_white_pixels(image_path, hex_color):
       cv2.imwrite(output_image_path, image)
       _, encoded_image = cv2.imencode('.png', image)
       base64_string = base64.b64encode(encoded_image).decode('utf-8')
-      return jsonify({'outputImage': base64_string})
+      return base64_string
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'White Pixels to Color Failed'})
@@ -105,7 +105,7 @@ def filter_out_color(image_path, target_color_hex, threshold):
         cv2.imwrite(output_image_path, filtered_image)
         _, encoded_image = cv2.imencode('.png', filtered_image)
         base64_string = base64.b64encode(encoded_image).decode('utf-8')
-        return jsonify({'outputImage': base64_string})
+        return base64_string
 
     except Exception as e:
         print("Error:", e)
@@ -164,7 +164,7 @@ def filter_by_color(image_path, target_color_hex, threshold):
         cv2.imwrite(output_image_path, filtered_image)
         _, encoded_image = cv2.imencode('.png', filtered_image)
         base64_string = base64.b64encode(encoded_image).decode('utf-8')
-        return jsonify({'outputImage': base64_string})
+        return base64_string
 
     except Exception as e:
         print("Error:", e)

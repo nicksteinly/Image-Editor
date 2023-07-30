@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, Blueprint
 from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
 from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels
 from BackgroundRemoval import remove_black_background_to_png
+import numpy as np
 
 operations_bp = Blueprint('/operations', __name__)
 
@@ -117,11 +118,11 @@ def call_operation():
     #try:
         data = request.json
         operations = data.get('operations')
+        result_image_list = []
         if operations is None:
             return jsonify({"error": "No operations found."}), 404
         
         for operation in operations:
-            print(operation)
             if operation['name'] in operation_names is None :
                 return jsonify({"error": f"Operation '{operation}' not found."}), 404
 
@@ -153,10 +154,12 @@ def call_operation():
                 param_values.append(param_value)
 
             # Call the function with the parameter values
-            result_image_json = corresponding_function(*param_values)
+            result_image = corresponding_function(*param_values)
 
+            #TODO change to numpy and use .tolist() to send in json
+            result_image_list.append(result_image)
             # Return the result as a JSON response
-            return result_image_json
+        return {'outputImages': result_image_list}
 
     # except Exception as e:
     #     return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500

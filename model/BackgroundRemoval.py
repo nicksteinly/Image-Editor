@@ -34,7 +34,7 @@ def remove_black_background_to_png(image_path):
         with open(output_image_path, 'rb') as image_file:
             base64_string = base64.b64encode(image_file.read()).decode('utf-8')
         
-        return {'outputImage': base64_string}
+        return base64_string
     
     except Exception as e:
         print(e)
