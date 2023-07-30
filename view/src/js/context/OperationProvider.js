@@ -12,6 +12,7 @@ export const OperationProvider = ({ children }) => {
   const operationsController = new OperationsController(operationBaseURL);
   const [operations, setOperations] = useState([]);
   const [addedOperations, setAddedOperations] = useState([]);
+  const [addedOperationsJSON, setAddedOperationsJSON] = useState({});
 
   useEffect(() => {
     // Define an asynchronous function inside useEffect
@@ -29,9 +30,13 @@ export const OperationProvider = ({ children }) => {
     fetchData();
   }, []); // Empty dependency array means this will run only once on mount
 
-  const addOperation = (operationName) => {
+  const addOperation = ({operationName, operationJSON, paramValues}) => {
+    for (const [paramName, paramValue] of Object.entries(paramValues)) {
+      operationJSON.parameters[paramName] = paramValue;
+    }
+    console.log(operationJSON);
     setAddedOperations([...addedOperations, operationName]);
-    console.log(operationName);
+    setAddedOperationsJSON(operationJSON);
   };
 
   const removeOperation = (index) => {
@@ -40,12 +45,14 @@ export const OperationProvider = ({ children }) => {
     const updatedOperations = [...addedOperations];
     // Remove the element at the specified index using splice
     updatedOperations.splice(index, 1);
+    addedOperationsJSON.splice(index, 1);
     // Update the state with the modified array
     setAddedOperations(updatedOperations);
+    setAddedOperationsJSON({addedOperationsJSON});
   };
 
   return (
-    <OperationContext.Provider value={{ operations, addOperation, removeOperation, addedOperations }}>
+    <OperationContext.Provider value={{ operations, addOperation, removeOperation, addedOperations, addedOperationsJSON }}>
       {children}
     </OperationContext.Provider>
   );

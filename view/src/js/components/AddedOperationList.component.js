@@ -7,10 +7,11 @@ const operationBaseURL = 'http://127.0.0.1:5000/operations';
 export const AddedOperationList = () => {
   const operationsController = new OperationsController(operationBaseURL);
   const addedOperations = useOperation().addedOperations;
+  const addedOperationsJSON = useOperation().addedOperationsJSON;
   const removeOperation = useOperation().removeOperation;
 
   const submit = async () => {
-    operationsController.submitOperations(addedOperations);
+    await operationsController.submitOperations(addedOperationsJSON);
   };
 
   return (

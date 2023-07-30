@@ -7,18 +7,19 @@ from flask import jsonify, request
 edge_detection_bp = Blueprint('edge_detection', __name__)
 
 @edge_detection_bp.route("/edge_detection_Canny", methods=["POST"])
-def edge_detection_Canny():
+def edge_detection_Canny(image_path):
     try:
-      data=request.json
-      image_path = data.get('imagePath')
+      # data=request.json
+      # image_path = data.get('imagePath')
       # Read the image
+      print(image_path)
       image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
       # Apply Canny edge detection
       edges = cv2.Canny(image, 100, 200)
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/canny.png'
       cv2.imwrite(output_image_path, edges)
-      return jsonify({'outputImage': edges})
+      return 'worked'
     
     except Exception as e:
         print("Error:", e)

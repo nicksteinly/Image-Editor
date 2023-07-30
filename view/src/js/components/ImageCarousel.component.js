@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ImageCarousel = ({ images }) => {
+export const ImageCarousel = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const goToNextImage = () => {
@@ -14,7 +14,7 @@ const ImageCarousel = ({ images }) => {
   return (
     <div className="image-carousel">
       <div className="image-container">
-        <img src={images[currentImageIndex]} alt={`Image ${currentImageIndex}`} />
+
       </div>
       <div className="controls">
         <button onClick={goToPrevImage}>Previous</button>
@@ -23,5 +23,3 @@ const ImageCarousel = ({ images }) => {
     </div>
   );
 };
-
-export default ImageCarousel;
