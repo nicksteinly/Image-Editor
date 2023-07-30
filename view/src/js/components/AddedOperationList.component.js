@@ -9,9 +9,11 @@ export const AddedOperationList = () => {
   const addedOperations = useOperation().addedOperations;
   const addedOperationsJSON = useOperation().addedOperationsJSON;
   const removeOperation = useOperation().removeOperation;
+  const [imageData, setImageData] = useState('');
 
   const submit = async () => {
-    await operationsController.submitOperations(addedOperationsJSON);
+    const image_response = await operationsController.submitOperations(addedOperationsJSON);
+    setImageData(image_response);
   };
 
   return (
@@ -27,6 +29,7 @@ export const AddedOperationList = () => {
         ))}
       </ol>
       <button onClick={submit}>Submit</button>
+      {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Your Image" width={'50%'} height={'50%'}/>}
     </div>
   );
 };

@@ -8,7 +8,7 @@ from flask import jsonify, request
 recoloration_bp = Blueprint('recoloration', __name__)
 
 @recoloration_bp.route('/recolor_white_pixels', methods=["POST"])
-def recolor_white_pixels():
+def recolor_white_pixels(image_path, hex_color):
     """
     Recolor white pixels in the input image to a specified color.
 
@@ -27,9 +27,9 @@ def recolor_white_pixels():
     }
     """
     try:
-      data = request.json
-      image_path = data.get('inputImagePath')
-      hex_color = data.get('hexColor')
+    #   data = request.json
+    #   image_path = data.get('inputImagePath')
+    #   hex_color = data.get('hexColor')
       # Read the image
       image = cv2.imread(image_path)
 
@@ -51,7 +51,7 @@ def recolor_white_pixels():
         return jsonify({'error': 'White Pixels to Color Failed'})
 
 @recoloration_bp.route('/filter_out_color', methods=['POST'])
-def filter_out_color():
+def filter_out_color(image_path, target_color_hex, threshold):
     """
     Filter out colors similar to the target color from the input image.
 
@@ -73,10 +73,12 @@ def filter_out_color():
     }
     """
     try:
-        data = request.json
-        image_path = data.get('inputImagePath')
-        target_color_hex = data.get('targetColor')
-        threshold = data.get('threshold',30)
+        # data = request.json
+        # image_path = data.get('inputImagePath')
+        # target_color_hex = data.get('targetColor')
+        # threshold = data.get('threshold',30)
+
+        threshold_int = float(threshold)
 
         # Convert the target color from hex to BGR format
         target_color_bgr = hex_to_bgr(target_color_hex)
@@ -89,8 +91,8 @@ def filter_out_color():
         target_color_hsv = cv2.cvtColor(np.uint8([[target_color_bgr]]), cv2.COLOR_BGR2HSV)[0][0]
 
         # Define the lower and upper bounds of the target color in HSV
-        lower_bound = np.array([target_color_hsv[0] - threshold, 100, 100])
-        upper_bound = np.array([target_color_hsv[0] + threshold, 255, 255])
+        lower_bound = np.array([target_color_hsv[0] - threshold_int, 100, 100])
+        upper_bound = np.array([target_color_hsv[0] + threshold_int, 255, 255])
 
         # Create a mask using the inRange function to filter the target color
         mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
@@ -110,7 +112,7 @@ def filter_out_color():
         return jsonify({'error': 'Filtering out of color failed'})
 
 @recoloration_bp.route('/filter_by_color', methods=['POST'])
-def filter_by_color():
+def filter_by_color(image_path, target_color_hex, threshold):
     """
     Filter the input image to keep only colors similar to the target color.
 
@@ -132,22 +134,24 @@ def filter_by_color():
     }
     """
     try:
-        data = request.json
-        input_image_path = data.get('inputImagePath')
-        target_color_hex = data.get('targetColor')
-        threshold = data.get('threshold', 30)
+        # data = request.json
+        # input_image_path = data.get('inputImagePath')
+        # target_color_hex = data.get('targetColor')
+        # threshold = data.get('threshold', 30)
+
+        threshold_int = float(threshold)
 
         # Convert the target color from hex to BGR format
         target_color_bgr = hex_to_bgr(target_color_hex)
 
         # Read the input image
-        image = cv2.imread(input_image_path)
+        image = cv2.imread(image_path)
 
         # Calculate the Euclidean distance between each pixel and the target color
         color_distances = np.linalg.norm(image - target_color_bgr, axis=-1)
 
         # Create a mask based on the color distances within the target threshold
-        mask = color_distances <= threshold
+        mask = color_distances <= threshold_int
 
         # Invert the mask to include pixels outside the target threshold
         mask = ~mask

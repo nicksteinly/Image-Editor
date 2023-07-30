@@ -10,7 +10,7 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Canny Edge Detection",
         "parameters": {
-            "image_path": "str",
+            "image path": "str",
         },
         "description": "This is operation 1.",
         'corresponding_function': "edge_detection_Canny"
@@ -19,7 +19,7 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Outer Outline Detection",
         "parameters": {
-            "image_path": "str",
+            "image path": "str"
         },
         "description": "This is operation 2.",
         'corresponding_function': "outer_outline_detection"
@@ -28,7 +28,9 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Thickened Edges",
         "parameters": {
-            "image_path": "str",
+            "image path": "str",
+            "iterations": "int",
+            "kernel size": "int"
         },
         "description": "This is operation 3.",
         'corresponding_function': "thickened_edges"
@@ -37,8 +39,9 @@ operations_json = [
         "type": "Recoloration",
         "name": "Filter by Color",
         "parameters": {
-            "image_path": "str",
-            "color": "str"
+            "image path": "str",
+            "target hex color (don't include #))": "str",
+            "threshold": "int"
         },
         "description": "This is operation 4.",
         'corresponding_function': "filter_by_color"
@@ -47,8 +50,9 @@ operations_json = [
         "type": "Recoloration",
         "name": "Filter out Color",
         "parameters": {
-            "image_path": "str",
-            "color": "str"
+            "image path": "str",
+            "target hex color (don't include #))": "str",
+            "threshold": "int"
         },
         "description": "This is operation 5.",
         'corresponding_function': "filter_out_color"
@@ -57,8 +61,8 @@ operations_json = [
         "type": "Recoloration",
         "name": "Recolor White Pixels",
         "parameters": {
-            "image_path": "str",
-            "color": "str"
+            "image path": "str",
+            "target hex color (don't include #))": "str"
         },
         "description": "This is operation 6.",
         'corresponding_function': "recolor_white_pixels"
@@ -67,8 +71,7 @@ operations_json = [
         "type": "Background Removal",
         "name": "Remove Background",
         "parameters": {
-            "image_path": "str",
-            "color": "str"
+            "image path": "str"
         },
         "description": "This is operation 7.",
         'corresponding_function': "remove_black_background_to_png"
@@ -150,10 +153,10 @@ def call_operation():
                 param_values.append(param_value)
 
             # Call the function with the parameter values
-            corresponding_function(*param_values)
+            result_image_json = corresponding_function(*param_values)
 
             # Return the result as a JSON response
-            return 'worked'
+            return result_image_json
 
     # except Exception as e:
     #     return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500

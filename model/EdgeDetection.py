@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from flask import Blueprint
 from flask import jsonify, request
+import base64
 
 edge_detection_bp = Blueprint('edge_detection', __name__)
 
@@ -11,26 +12,27 @@ def edge_detection_Canny(image_path):
     try:
       # data=request.json
       # image_path = data.get('imagePath')
-      # Read the image
-      print(image_path)
+      # Read the image and convert it to grayscale
       image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
       # Apply Canny edge detection
       edges = cv2.Canny(image, 100, 200)
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/canny.png'
       cv2.imwrite(output_image_path, edges)
-      return 'worked'
+      _, encoded_image = cv2.imencode('.png', edges)
+      base64_string = base64.b64encode(encoded_image).decode('utf-8')
+      return jsonify({'outputImage': base64_string})
     
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'Canny Edge Detection Failed'})
 
 @edge_detection_bp.route("/outer_outline_detection", methods=["POST"])
-def outer_outline_detection():
+def outer_outline_detection(image_path):
     # Read the image and convert it to grayscale
     try:
-      data=request.json
-      image_path = data.get('imagePath')
+      # data=request.json
+      # image_path = data.get('imagePath')
       image = cv2.imread(image_path)
       gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -54,20 +56,23 @@ def outer_outline_detection():
       _, outer_outline = cv2.threshold(outer_contours_gray, 1, 255, cv2.THRESH_BINARY)
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/outer-outline.png'
       cv2.imwrite(output_image_path, outer_outline)
-      return jsonify({'outputImage': outer_outline})
+      _, encoded_image = cv2.imencode('.png', outer_outline)
+      base64_string = base64.b64encode(encoded_image).decode('utf-8')
+      return jsonify({'outputImage': base64_string})
     
     except Exception as e:
       print("Error:", e)
       return jsonify({'error': 'Outer Outline Detection Failed'})
 
 @edge_detection_bp.route('/thickened_edges', methods=['POST'])
-def thickened_edges():
+def thickened_edges(image_path, iterations, kernel_size):
     try:
-        data = request.json
-        image_path = data.get('imagePath')
-        kernel_size = data.get('kernelSize')
-        iterations = data.get('iterations')
-
+        # data = request.json
+        # image_path = data.get('imagePath')
+        # kernel_size = data.get('kernelSize')
+        # iterations = data.get('iterations')
+        iterations_int = int(iterations)
+        kernel_size_int = int(kernel_size)
         # Read the image and convert it to grayscale
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
@@ -75,15 +80,17 @@ def thickened_edges():
         edges = cv2.Canny(image, 100, 200)
 
         # Create a kernel for dilation
-        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+        kernel = np.ones((kernel_size_int, kernel_size_int), np.uint8)
 
         # Dilate the edges to thicken them
-        thick_edges = cv2.dilate(edges, kernel, iterations=iterations)
+        thick_edges = cv2.dilate(edges, kernel, iterations=iterations_int)
 
         # Convert NumPy ndarray to list for JSON serialization
         output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/thickened.png'
         cv2.imwrite(output_image_path, thick_edges)
-        return jsonify({'outputImage': thick_edges})
+        _, encoded_image = cv2.imencode('.png', thick_edges)
+        base64_string = base64.b64encode(encoded_image).decode('utf-8')
+        return jsonify({'outputImage': base64_string})
 
     except Exception as e:
         print("Error:", e)
