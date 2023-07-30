@@ -34,8 +34,18 @@ export const OperationProvider = ({ children }) => {
     console.log(operationName);
   };
 
+  const removeOperation = (index) => {
+    console.log(index);
+    // Create a copy of the addedOperations array to avoid directly modifying the state array
+    const updatedOperations = [...addedOperations];
+    // Remove the element at the specified index using splice
+    updatedOperations.splice(index, 1);
+    // Update the state with the modified array
+    setAddedOperations(updatedOperations);
+  };
+
   return (
-    <OperationContext.Provider value={{ operations, addOperation, addedOperations }}>
+    <OperationContext.Provider value={{ operations, addOperation, removeOperation, addedOperations }}>
       {children}
     </OperationContext.Provider>
   );

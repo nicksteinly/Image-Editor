@@ -13,7 +13,7 @@ export const ParentOperationsPage = () => {
   return (
     <div>
       <OperationForm />
-      <AddedOperationList addOperation={operationAdded} />
+      <AddedOperationList />
     </div>
   );
 };

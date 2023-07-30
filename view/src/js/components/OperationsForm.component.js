@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { OperationsController } from '../controller/OperationsController';
 import { useOperation } from '../context/OperationProvider';
 
-const operationBaseURL = 'http://127.0.0.1:5000/operations';
-
 export const OperationForm = () => {
   const operations = useOperation().operations;
   const addOperation = useOperation().addOperation;

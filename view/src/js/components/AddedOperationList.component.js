@@ -7,6 +7,7 @@ const operationBaseURL = 'http://127.0.0.1:5000/operations';
 export const AddedOperationList = () => {
   const operationsController = new OperationsController(operationBaseURL);
   const addedOperations = useOperation().addedOperations;
+  const removeOperation = useOperation().removeOperation;
 
   const submit = async () => {
     operationsController.submitOperations(addedOperations);
@@ -16,11 +17,14 @@ export const AddedOperationList = () => {
     <div>
       <h2>Operation List</h2>
       {console.log(addedOperations)}
-      {addedOperations?.map((operation, index) => (
-        <div key={index}>
-          <li>{operation}</li>
-        </div>
-      ))}
+      <ol>
+        {addedOperations?.map((operation, index) => (
+          <div key={index}>
+            <li >{operation}</li>
+            <button onClick={() => removeOperation(index)}>Remove</button>
+          </div>
+        ))}
+      </ol>
       <button onClick={submit}>Submit</button>
     </div>
   );
