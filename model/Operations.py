@@ -1,3 +1,4 @@
+import cv2
 from flask import Flask, jsonify, request, Blueprint
 from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
 from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels
@@ -11,7 +12,6 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Canny Edge Detection",
         "parameters": {
-            "image path": "str",
         },
         "description": "This is operation 1.",
         'corresponding_function': "edge_detection_Canny"
@@ -20,7 +20,6 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Outer Outline Detection",
         "parameters": {
-            "image path": "str"
         },
         "description": "This is operation 2.",
         'corresponding_function': "outer_outline_detection"
@@ -29,7 +28,6 @@ operations_json = [
         "type": "Edge Detection",
         "name": "Thickened Edges",
         "parameters": {
-            "image path": "str",
             "iterations": "int",
             "kernel size": "int"
         },
@@ -40,7 +38,6 @@ operations_json = [
         "type": "Recoloration",
         "name": "Filter by Color",
         "parameters": {
-            "image path": "str",
             "target hex color (don't include #))": "str",
             "threshold": "int"
         },
@@ -51,7 +48,6 @@ operations_json = [
         "type": "Recoloration",
         "name": "Filter out Color",
         "parameters": {
-            "image path": "str",
             "target hex color (don't include #))": "str",
             "threshold": "int"
         },
@@ -62,7 +58,6 @@ operations_json = [
         "type": "Recoloration",
         "name": "Recolor White Pixels",
         "parameters": {
-            "image path": "str",
             "target hex color (don't include #))": "str"
         },
         "description": "This is operation 6.",
@@ -72,7 +67,6 @@ operations_json = [
         "type": "Background Removal",
         "name": "Remove Background",
         "parameters": {
-            "image path": "str"
         },
         "description": "This is operation 7.",
         'corresponding_function': "remove_black_background_to_png"
@@ -118,6 +112,8 @@ def call_operation():
     #try:
         data = request.json
         operations = data.get('operations')
+        print(data.get('inputImage'))
+        image_input = cv2.imread(data.get('inputImage'))
         result_image_list = []
         if operations is None:
             return jsonify({"error": "No operations found."}), 404
@@ -153,9 +149,10 @@ def call_operation():
                 #     return jsonify({"error": f"Parameter type mismatch for parameter '{param_name}'."}), 404
                 param_values.append(param_value)
 
+            param_values.append(image_input)
             # Call the function with the parameter values
             result_image = corresponding_function(*param_values)
-
+            image_input = result_image
             #TODO change to numpy and use .tolist() to send in json
             result_image_list.append(result_image)
             # Return the result as a JSON response

@@ -8,12 +8,12 @@ import base64
 edge_detection_bp = Blueprint('edge_detection', __name__)
 
 @edge_detection_bp.route("/edge_detection_Canny", methods=["POST"])
-def edge_detection_Canny(image_path):
+def edge_detection_Canny(image_input):
     try:
       # data=request.json
       # image_path = data.get('imagePath')
       # Read the image and convert it to grayscale
-      image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+      image = cv2.cvtColor(image_input, cv2.IMREAD_GRAYSCALE)
 
       # Apply Canny edge detection
       edges = cv2.Canny(image, 100, 200)
@@ -28,12 +28,12 @@ def edge_detection_Canny(image_path):
         return jsonify({'error': 'Canny Edge Detection Failed'})
 
 @edge_detection_bp.route("/outer_outline_detection", methods=["POST"])
-def outer_outline_detection(image_path):
+def outer_outline_detection(image_input):
     # Read the image and convert it to grayscale
     try:
       # data=request.json
       # image_path = data.get('imagePath')
-      image = cv2.imread(image_path)
+      image = image_input
       gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
       # Apply GaussianBlur to reduce noise and improve edge detection
@@ -65,7 +65,7 @@ def outer_outline_detection(image_path):
       return jsonify({'error': 'Outer Outline Detection Failed'})
 
 @edge_detection_bp.route('/thickened_edges', methods=['POST'])
-def thickened_edges(image_path, iterations, kernel_size):
+def thickened_edges(iterations, kernel_size, image_input):
     try:
         # data = request.json
         # image_path = data.get('imagePath')
@@ -74,7 +74,7 @@ def thickened_edges(image_path, iterations, kernel_size):
         iterations_int = int(iterations)
         kernel_size_int = int(kernel_size)
         # Read the image and convert it to grayscale
-        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        image = image_input
 
         # Apply Canny edge detection
         edges = cv2.Canny(image, 100, 200)

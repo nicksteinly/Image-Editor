@@ -10,9 +10,15 @@ export const AddedOperationList = () => {
   const addedOperationsJSON = useOperation().addedOperationsJSON;
   const removeOperation = useOperation().removeOperation;
   const [imagesData, setImageData] = useState([]);
+  const [uploadedImage, setUploadedImage] = useState('');
+
+  const uploadImage = async (img) => {
+    setUploadedImage(img)
+  }
 
   const submit = async () => {
-    const image_response = await operationsController.submitOperations(addedOperationsJSON);
+    console.log(uploadedImage)
+    const image_response = await operationsController.submitOperations({operationsJSON: addedOperationsJSON, inputImage: uploadedImage});
     setImageData(image_response);
   };
 
@@ -28,6 +34,8 @@ export const AddedOperationList = () => {
           </div>
         ))}
       </ol>
+      <input type='file' onChange={(e) => uploadImage(e.target.value)}>
+      </input>
       <button onClick={submit}>Submit</button>
       {console.log(imagesData)}
       {imagesData && imagesData.map((imageData, index)   => (

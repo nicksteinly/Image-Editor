@@ -92,7 +92,7 @@ export class OperationsController{
     }
   }
 
-  async submitOperations(operationsJSON){
+  async submitOperations({operationsJSON, inputImage}){
     try{
       const response = await fetch(`${this.baseURL}/call_operations`, {
         method: 'POST',
@@ -100,7 +100,7 @@ export class OperationsController{
           'Content-Type': 'application/json',
         },
         withCredentials: true,
-        body: JSON.stringify({'operations': operationsJSON}),
+        body: JSON.stringify({'operations': operationsJSON, 'inputImage': inputImage}),
       });
       if (!response.ok) {
         throw new Error('Failed to fetch data');

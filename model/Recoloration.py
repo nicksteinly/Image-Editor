@@ -8,7 +8,7 @@ from flask import jsonify, request
 recoloration_bp = Blueprint('recoloration', __name__)
 
 @recoloration_bp.route('/recolor_white_pixels', methods=["POST"])
-def recolor_white_pixels(image_path, hex_color):
+def recolor_white_pixels(hex_color, image_input):
     """
     Recolor white pixels in the input image to a specified color.
 
@@ -31,7 +31,7 @@ def recolor_white_pixels(image_path, hex_color):
     #   image_path = data.get('inputImagePath')
     #   hex_color = data.get('hexColor')
       # Read the image
-      image = cv2.imread(image_path)
+      image = image_input
 
       # Convert the hex color to BGR format (OpenCV uses BGR instead of RGB)
       color_bgr = tuple(int(hex_color[i:i+2], 16) for i in (4, 2, 0))
@@ -51,7 +51,7 @@ def recolor_white_pixels(image_path, hex_color):
         return jsonify({'error': 'White Pixels to Color Failed'})
 
 @recoloration_bp.route('/filter_out_color', methods=['POST'])
-def filter_out_color(image_path, target_color_hex, threshold):
+def filter_out_color(target_color_hex, threshold, image_input):
     """
     Filter out colors similar to the target color from the input image.
 
@@ -84,7 +84,7 @@ def filter_out_color(image_path, target_color_hex, threshold):
         target_color_bgr = hex_to_bgr(target_color_hex)
 
         # Convert the image to the HSV color space
-        image = cv2.imread(image_path)
+        image = image_input
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Convert the target color to HSV format
@@ -112,7 +112,7 @@ def filter_out_color(image_path, target_color_hex, threshold):
         return jsonify({'error': 'Filtering out of color failed'})
 
 @recoloration_bp.route('/filter_by_color', methods=['POST'])
-def filter_by_color(image_path, target_color_hex, threshold):
+def filter_by_color(target_color_hex, threshold, image_input):
     """
     Filter the input image to keep only colors similar to the target color.
 
@@ -145,7 +145,7 @@ def filter_by_color(image_path, target_color_hex, threshold):
         target_color_bgr = hex_to_bgr(target_color_hex)
 
         # Read the input image
-        image = cv2.imread(image_path)
+        image = image_input
 
         # Calculate the Euclidean distance between each pixel and the target color
         color_distances = np.linalg.norm(image - target_color_bgr, axis=-1)
@@ -177,13 +177,3 @@ def hex_to_bgr(hex_color):
   g = int(hex_color[3:5], 16)
   b = int(hex_color[5:7], 16)
   return [b, g, r]  # OpenCV uses BGR format
-
-def read_and_convert_image(image_path):
-    # Read the image
-    image = cv2.imread(image_path)
-
-    # Convert the image to base64 format
-    _, encoded_image = cv2.imencode('.png', image)
-    base64_string = base64.b64encode(encoded_image).decode('utf-8')
-
-    return base64_string

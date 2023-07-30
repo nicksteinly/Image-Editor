@@ -8,10 +8,10 @@ import base64
 background_removal_bp = Blueprint('background_removal', __name__)
 
 @background_removal_bp.route('/remove_black_background', methods=["POST"])
-def remove_black_background_to_png(image_path):
+def remove_black_background_to_png(image_input):
     try:
         output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/black-background-removal.png'
-        img = Image.open(image_path)
+        img = image_input
         rgba = img.convert("RGBA")
         datas = rgba.getdata()
         
