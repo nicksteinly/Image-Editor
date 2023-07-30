@@ -5,6 +5,7 @@ Computer Vision based image editor
 TODO:
 
 - fix/investigate bug with shifting input values after doing an image operation
+- fix the file/path assumption in Operations.py
 - test all parameters inputs for operations
 - fix the remove operation bug
 - make a list operations on an image work as opposed to just one
