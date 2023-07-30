@@ -4,51 +4,39 @@ import base64
 from PIL import Image
 from flask import Blueprint
 from flask import jsonify, request
+import webcolors
 
 recoloration_bp = Blueprint('recoloration', __name__)
 
+def hex_to_bgr(hex_color):
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    return b, g, r
+
 @recoloration_bp.route('/recolor_white_pixels', methods=["POST"])
 def recolor_white_pixels(hex_color, image_input):
-    """
-    Recolor white pixels in the input image to a specified color.
+     # Convert hex color to RGB
+    bgr_color = hex_to_bgr(hex_color)
 
-    Input JSON:
-    {
-        "inputImagePath": "path/to/input/image.png",
-        "hexColor": "#RRGGBB"
-    }
+    # Flatten the image array to 2D with 3 columns (RGB)
+    flatted_image_array = image_input.reshape(-1, 3)
 
-    The function replaces all white pixels (RGB value [255, 255, 255]) in the input image with the color specified
-    by 'hexColor'. The target color should be given in hex format (e.g., "#RRGGBB").
+    # Get the indices of white pixels
+    white_pixels_indices = np.all(flatted_image_array == [255, 255, 255], axis=1)
 
-    Output JSON:
-    {
-        "outputImagePath": "path/to/output/image.png"
-    }
-    """
-    try:
-    #   data = request.json
-    #   image_path = data.get('inputImagePath')
-    #   hex_color = data.get('hexColor')
-      # Read the image
-      image = image_input
+    # Replace white pixels with the inputted color
+    flatted_image_array[white_pixels_indices] = bgr_color
 
-      # Convert the hex color to BGR format (OpenCV uses BGR instead of RGB)
-      color_bgr = tuple(int(hex_color[i:i+2], 16) for i in (4, 2, 0))
+    # Reshape the flattened array back to the original image shape
+    modified_image = flatted_image_array.reshape(image_input.shape)
 
-      # Find white pixels (assume that white is close to [255, 255, 255] in BGR)
-      white_mask = np.all(image == [255, 255, 255], axis=-1)
+    output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/recolored-white-pixels.png'
+    cv2.imwrite(output_image_path, image_input)
+    _, encoded_image = cv2.imencode('.png', modified_image)
+    base64_string = base64.b64encode(encoded_image).decode('utf-8')
+    return image_input, base64_string
 
-      # Replace white pixels with the specified color
-      image[white_mask] = color_bgr
-      output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/recolored-white-pixels.png'
-      cv2.imwrite(output_image_path, image)
-      _, encoded_image = cv2.imencode('.png', image)
-      base64_string = base64.b64encode(encoded_image).decode('utf-8')
-      return image, base64_string
-    except Exception as e:
-        print("Error:", e)
-        return jsonify({'error': 'White Pixels to Color Failed'})
 
 @recoloration_bp.route('/filter_out_color', methods=['POST'])
 def filter_out_color(target_color_hex, threshold, image_input):

@@ -65,7 +65,7 @@ operations_json = [
     },
     {
         "type": "Background Removal",
-        "name": "Remove Background",
+        "name": "Remove Black Background",
         "parameters": {
         },
         "description": "This is operation 7.",
@@ -109,7 +109,7 @@ def retrieve_operation_description():
     
 @operations_bp.route('/call_operations', methods=['POST'])
 def call_operation():
-    #try:
+    # try:
         data = request.json
         operations = data.get('operations')
         print(data.get('inputImage'))
@@ -161,7 +161,3 @@ def call_operation():
     # except Exception as e:
     #     return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500
     
-def function1(parameters):
-    print("This is function 1.")
-    print(parameters)
-          

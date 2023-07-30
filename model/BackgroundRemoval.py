@@ -12,7 +12,7 @@ def remove_black_background_to_png(image_input):
     try:
         # Convert the NumPy array to a PIL Image object
         img = Image.fromarray(image_input)
-
+        
         rgba = img.convert("RGBA")
         datas = rgba.getdata()
 
