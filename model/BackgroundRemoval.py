@@ -26,7 +26,7 @@ def remove_black_background_to_png():
         
       rgba.putdata(newData)
       rgba.save(output_image_path, "PNG")
-      return jsonify({'success': 'Remove Black Background Succeeded'})
+      return jsonify({'outputImage': rgba})
     except Exception as e:
         print(e)
         return jsonify({'error': 'Remove Black Background Failed'})

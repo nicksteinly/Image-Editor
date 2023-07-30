@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import base64
 from PIL import Image
 from flask import Blueprint
 from flask import jsonify, request
@@ -42,7 +43,9 @@ def recolor_white_pixels():
       image[white_mask] = color_bgr
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/recolored-white-pixels.png'
       cv2.imwrite(output_image_path, image)
-      return jsonify({'outputImagePath': output_image_path})
+      _, encoded_image = cv2.imencode('.png', image)
+      base64_string = base64.b64encode(encoded_image).decode('utf-8')
+      return jsonify({'outputImage': base64_string})
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'White Pixels to Color Failed'})
@@ -98,7 +101,9 @@ def filter_out_color():
 
         output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/filtered-color-out.png'
         cv2.imwrite(output_image_path, filtered_image)
-        return jsonify({'outputImagePath': output_image_path})
+        _, encoded_image = cv2.imencode('.png', filtered_image)
+        base64_string = base64.b64encode(encoded_image).decode('utf-8')
+        return jsonify({'outputImage': base64_string})
 
     except Exception as e:
         print("Error:", e)
@@ -153,7 +158,9 @@ def filter_by_color():
 
         output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/filtered-by-color.png'
         cv2.imwrite(output_image_path, filtered_image)
-        return jsonify({'outputImagePath': output_image_path})
+        _, encoded_image = cv2.imencode('.png', filtered_image)
+        base64_string = base64.b64encode(encoded_image).decode('utf-8')
+        return jsonify({'outputImage': base64_string})
 
     except Exception as e:
         print("Error:", e)
@@ -166,3 +173,13 @@ def hex_to_bgr(hex_color):
   g = int(hex_color[3:5], 16)
   b = int(hex_color[5:7], 16)
   return [b, g, r]  # OpenCV uses BGR format
+
+def read_and_convert_image(image_path):
+    # Read the image
+    image = cv2.imread(image_path)
+
+    # Convert the image to base64 format
+    _, encoded_image = cv2.imencode('.png', image)
+    base64_string = base64.b64encode(encoded_image).decode('utf-8')
+
+    return base64_string

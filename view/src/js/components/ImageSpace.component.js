@@ -12,7 +12,7 @@ export const ImageSpaceComponent = () => {
   const edgeDetectionController = new EdgeDetectionController(edgeDetectionBaseURL);
   const backgroundRemovalController = new BackgroundRemovalController(backgroundRemovalBaseURL);
   const recolorationController = new RecolorationController(recolorationBaseURL);
-  const [imagePath, setImagePath] = useState('');
+  const [imageData, setImageData] = useState('');
   const initialEmblemPath = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/firetruck.jpeg';
   const edgeDetectionFunctions = async () => { 
     const outerOutlineDetection = await edgeDetectionController.outerOutlineDetection({inputImagePath: initialEmblemPath});
@@ -22,11 +22,12 @@ export const ImageSpaceComponent = () => {
     const outputImagePath2 = await backgroundRemovalController.removeBlackBackground({inputImagePath: recoloration});
     const removeColor = await recolorationController.filter_out_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: .5});
     const filter_by_color = await recolorationController.filter_by_color({inputImagePath: initialEmblemPath, targetColor: 'D30000', threshold: 100});
+    setImageData(filter_by_color);
   }
 
 return (
   <div>
-    <img src={imagePath} className="image-space"/>
+    {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Your Image" />}
     <br/>
     <button onClick={edgeDetectionFunctions}>Canny Detection</button>
   </div>

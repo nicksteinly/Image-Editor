@@ -1,0 +1,47 @@
+import React, { Component }  from 'react';
+
+import { useState } from "react";
+import { createContext, useContext } from 'react';
+import { useEffect } from 'react';
+import { OperationsController } from '../controller/OperationsController';
+
+const operationBaseURL = 'http://127.0.0.1:5000/operations';
+const OperationContext = createContext();
+
+export const OperationProvider = ({ children }) => {
+  const operationsController = new OperationsController(operationBaseURL);
+  const [operations, setOperations] = useState([]);
+  const [addedOperations, setAddedOperations] = useState([]);
+
+  useEffect(() => {
+    // Define an asynchronous function inside useEffect
+    const fetchData = async () => {
+      try {
+        const operations = await operationsController.getOperations();
+        setOperations(operations);
+      } catch (error) {
+        // Handle any errors that might occur during the API call
+        console.error('Error fetching operation names:', error);
+      }
+    };
+
+    // Call the asynchronous function immediately inside useEffect
+    fetchData();
+  }, []); // Empty dependency array means this will run only once on mount
+
+  const addOperation = (operationName) => {
+    setAddedOperations([...addedOperations, operationName]);
+    console.log(operationName);
+  };
+
+  return (
+    <OperationContext.Provider value={{ operations, addOperation, addedOperations }}>
+      {children}
+    </OperationContext.Provider>
+  );
+
+}
+
+export const useOperation = () => {
+  return useContext(OperationContext);
+};

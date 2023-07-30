@@ -20,7 +20,7 @@ export class BackgroundRemovalController{
       }
 
       const data = await response.json();
-      return data.outputImagePath;
+      return data.outputImage;
 
     } catch (error) {
       console.error('Error:', error);

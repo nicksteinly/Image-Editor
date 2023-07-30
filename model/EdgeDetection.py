@@ -18,7 +18,7 @@ def edge_detection_Canny():
       edges = cv2.Canny(image, 100, 200)
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/canny.png'
       cv2.imwrite(output_image_path, edges)
-      return jsonify({'outputImagePath': output_image_path})
+      return jsonify({'outputImage': edges})
     
     except Exception as e:
         print("Error:", e)
@@ -53,7 +53,7 @@ def outer_outline_detection():
       _, outer_outline = cv2.threshold(outer_contours_gray, 1, 255, cv2.THRESH_BINARY)
       output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/outer-outline.png'
       cv2.imwrite(output_image_path, outer_outline)
-      return jsonify({'outputImagePath': output_image_path})
+      return jsonify({'outputImage': outer_outline})
     
     except Exception as e:
       print("Error:", e)
@@ -80,10 +80,9 @@ def thickened_edges():
         thick_edges = cv2.dilate(edges, kernel, iterations=iterations)
 
         # Convert NumPy ndarray to list for JSON serialization
-        thick_edges_list = thick_edges.tolist()
         output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/thickened.png'
         cv2.imwrite(output_image_path, thick_edges)
-        return jsonify({'outputImagePath': output_image_path})
+        return jsonify({'outputImage': thick_edges})
 
     except Exception as e:
         print("Error:", e)
