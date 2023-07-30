@@ -94,6 +94,7 @@ export class OperationsController{
 
   async submitOperations({operationsJSON, inputImage}){
     try{
+      console.log(inputImage)
       const response = await fetch(`${this.baseURL}/call_operations`, {
         method: 'POST',
         headers: {

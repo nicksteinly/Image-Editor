@@ -113,7 +113,7 @@ def call_operation():
         data = request.json
         operations = data.get('operations')
         print(data.get('inputImage'))
-        image_input = cv2.imread(data.get('inputImage'))
+        image_input = cv2.imread("/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/" + data.get('inputImage'))
         result_image_list = []
         if operations is None:
             return jsonify({"error": "No operations found."}), 404
@@ -151,10 +151,9 @@ def call_operation():
 
             param_values.append(image_input)
             # Call the function with the parameter values
-            result_image = corresponding_function(*param_values)
-            image_input = result_image
+            image_input , result_image_encoded = corresponding_function(*param_values)
             #TODO change to numpy and use .tolist() to send in json
-            result_image_list.append(result_image)
+            result_image_list.append(result_image_encoded)
             # Return the result as a JSON response
         return {'outputImages': result_image_list}
 
