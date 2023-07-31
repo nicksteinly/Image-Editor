@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { OperationsController } from '../controller/OperationsController';
 import { useOperation } from '../context/OperationProvider';
+import {Accordion} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const OperationForm = () => {
   const operations = useOperation().operations;
@@ -18,22 +21,25 @@ export const OperationForm = () => {
   return (
     <div>
       <h2>Operations</h2>
+      <Accordion>
       {operations?.map((operation, index) => (
-        <div key={index}>
-          <h2>{operation?.type}</h2>
-          <h3>{operation?.name}</h3>
-          <p>Description: {operation?.description}</p>
-          <p>Parameters:</p>
-          <ul>
+        <Accordion.Item key={index} eventKey={index}>
+          <Accordion.Header><h3>{operation?.name}</h3></Accordion.Header>
+          <Accordion.Body>
+            <p>Description: {operation?.description}</p>
+            <p>Parameters:</p>
+            <ul>
             {Object.entries(operation?.parameters)?.map(([paramName, paramType]) => (
-              <li key={paramName}>
-                {paramName}: <input type={paramType} onChange={(e) => handleInputChange(paramName, e.target.value)}/>
-              </li>
-            ))}
-          </ul>
-          <button onClick={() => addOperation({operationName: operation?.name, operationJSON: operation, paramValues: paramValues, setParamValues: setParamValues})}>Add</button>
-        </div>
+                  <li key={paramName}>
+                    {paramName}: <input type={paramType} onChange={(e) => handleInputChange(paramName, e.target.value)}/>
+                  </li>
+                ))}
+            </ul>
+            <Button onClick={() => addOperation({operationName: operation?.name, operationJSON: operation, paramValues: paramValues, setParamValues: setParamValues})}>Add</Button>
+          </Accordion.Body>
+        </Accordion.Item>
       ))}
+      </Accordion>
     </div>
   );
 };

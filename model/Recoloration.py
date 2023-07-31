@@ -72,7 +72,7 @@ def filter_out_color(target_color_hex, threshold, image_input):
         threshold_int = float(threshold)
 
         # Convert the target color from hex to BGR format
-        target_color_bgr = hex_to_bgr(target_color_hex)
+        target_color_bgr = HEX_to_BGR(target_color_hex)
 
         # Convert the image to the HSV color space
         image = image_input
@@ -133,7 +133,7 @@ def filter_by_color(target_color_hex, threshold, image_input):
         threshold_int = float(threshold)
 
         # Convert the target color from hex to BGR format
-        target_color_bgr = hex_to_bgr(target_color_hex)
+        target_color_bgr = HEX_to_BGR(target_color_hex)
 
         # Read the input image
         image = image_input
@@ -160,11 +160,3 @@ def filter_by_color(target_color_hex, threshold, image_input):
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'Filtering by color failed'})
-    
-
-def hex_to_bgr(hex_color):
-  # Convert hex color (e.g., "#RRGGBB") to BGR format (OpenCV uses BGR instead of RGB)
-  r = int(hex_color[1:3], 16)
-  g = int(hex_color[3:5], 16)
-  b = int(hex_color[5:7], 16)
-  return [b, g, r]  # OpenCV uses BGR format

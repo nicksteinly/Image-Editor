@@ -2,7 +2,7 @@ import cv2
 from flask import Flask, jsonify, request, Blueprint
 from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
 from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels
-from BackgroundRemoval import remove_black_background_to_png
+from BackgroundRemoval import remove_black_background_to_png, overlay_image_with_mask
 import numpy as np
 
 operations_bp = Blueprint('/operations', __name__)
@@ -70,6 +70,15 @@ operations_json = [
         },
         "description": "This is operation 7.",
         'corresponding_function': "remove_black_background_to_png"
+    },
+    {
+        "type": "Background Removal",
+        "name": "Overlay Image with Mask",
+        "parameters": {
+            "mask image path": "str"
+        },
+        "description": "This is operation 8.",
+        'corresponding_function': "overlay_image_with_mask"
     }
   ]
 

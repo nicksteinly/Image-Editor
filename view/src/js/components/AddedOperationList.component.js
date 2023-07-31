@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { OperationsController } from '../controller/OperationsController';
 import { useOperation } from '../context/OperationProvider';
+import {Button} from 'react-bootstrap';
+import {ImageCarousel} from './ImageCarousel.component';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../css/added-operation-list.css';
 
 const operationBaseURL = 'http://127.0.0.1:5000/operations';
 
@@ -22,26 +26,22 @@ export const AddedOperationList = () => {
   };
 
   return (
-    <div>
-      <h2>Operation List</h2>
+    <div id="added-operations-list">
+      <h2>Added Operations List</h2>
       {console.log(addedOperations)}
       <ol>
         {addedOperations?.map((operation, index) => (
           <div key={index}>
             <li >{operation}</li>
-            <button onClick={() => removeOperation(index)}>Remove</button>
+            <Button onClick={() => removeOperation(index)}>Remove</Button>
           </div>
         ))}
       </ol>
       <input type='file' onChange={(e) => uploadImage(e.target.files[0])}>
       </input>
-      <button onClick={submit}>Submit</button>
+      <Button onClick={submit}>Submit</Button>
       {console.log(imagesData)}
-      {imagesData && imagesData.map((imageData, index)   => (
-        <div key={index}>
-          <img src={`data:image/png;base64,${imageData}`} alt="Your Image" width={'50%'} height={'50%'}/>
-        </div>
-      ))}
+      <ImageCarousel imagesData={imagesData}/>
     </div>
   );
 };

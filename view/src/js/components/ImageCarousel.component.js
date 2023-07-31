@@ -1,25 +1,50 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
+import '../../css/image-carousel.css'
 
-export const ImageCarousel = ({ images }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+export const ImageCarousel = ({ imagesData }) => {
+  const carouselRef = useRef(null);
 
-  const goToNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  const handleNext = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({
+        top: 0,
+        left: carouselRef.current.offsetWidth,
+        behavior: 'smooth',
+      });
+    }
   };
 
-  const goToPrevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  const handlePrev = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({
+        top: 0,
+        left: -carouselRef.current.offsetWidth,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
-    <div className="image-carousel">
-      <div className="image-container">
-
+    <div className="carousel-container">
+      <div className="carousel" ref={carouselRef}>
+        {imagesData &&
+          imagesData.map((imageData, index) => (
+            <div key={index} className="carousel-item">
+              <img
+                src={`data:image/png;base64,${imageData}`}
+                alt="Your Image"
+                width={'50%'}
+                height={'50%'}
+              />
+            </div>
+          ))}
       </div>
-      <div className="controls">
-        <button onClick={goToPrevImage}>Previous</button>
-        <button onClick={goToNextImage}>Next</button>
-      </div>
+      <button className="prev-button" onClick={handlePrev}>
+        previous
+      </button>
+      <button className="next-button" onClick={handleNext}>
+        next
+      </button>
     </div>
   );
 };
