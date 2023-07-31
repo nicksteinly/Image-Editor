@@ -18,15 +18,19 @@ def HEX_to_BGR(hex_color):
 def recolor_white_pixels(hex_color, image_input):
      # Convert hex color to RGB
     bgr_color = HEX_to_BGR(hex_color)
-    print(hex_color)
+    print(type(image_input))
+    print(len(image_input))
+    print(np.shape(image_input))
+
     # Flatten the image array to 2D with 3 columns (RGB)
     flatted_image_array = image_input.reshape(-1, 3)
+    print(np.shape(flatted_image_array))
     # Get the indices of white pixels
     white_pixels_indices = np.all(flatted_image_array == [255, 255, 255], axis=1)
 
     # Replace white pixels with the inputted color
     flatted_image_array[white_pixels_indices] = bgr_color
-    print(bgr_color)
+
     # Reshape the flattened array back to the original image shape
     modified_image = flatted_image_array.reshape(image_input.shape)
 

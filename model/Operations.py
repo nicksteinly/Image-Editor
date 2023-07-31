@@ -1,12 +1,9 @@
-import json
-import os
 import cv2
 from flask import Flask, jsonify, request, Blueprint
 from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
 from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels
 from BackgroundRemoval import remove_black_background_to_png
 import numpy as np
-from Config import UPLOAD_FILE_PATH
 
 operations_bp = Blueprint('/operations', __name__)
 
@@ -112,22 +109,17 @@ def retrieve_operation_description():
     
 @operations_bp.route('/call_operations', methods=['POST'])
 def call_operation():
-    try:
-        operations = request.form['operations']
-        image_file = request.files['inputImage']
-
-        # Parse the JSON string into a Python object (list or dictionary)
-        operations_array = json.loads(operations)
-        # Save the uploaded image to a temporary directory
-        temp_image_path = os.path.join(UPLOAD_FILE_PATH, request.files['inputImage'].filename)
-        image_file.save(temp_image_path)
-        image_input = cv2.imread(temp_image_path)
+    # try:
+        data = request.json
+        operations = data.get('operations')
+        print(data.get('inputImage'))
+        image_input = cv2.imread("/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/" + data.get('inputImage'))
         result_image_list = []
         if operations is None:
             return jsonify({"error": "No operations found."}), 404
         
-        for operation in operations_array:
-            if operation['name'] not in operation_names :
+        for operation in operations:
+            if operation['name'] in operation_names is None :
                 return jsonify({"error": f"Operation '{operation}' not found."}), 404
 
             json_entry = [entry for entry in operations_json if entry['name'] == operation['name']]
@@ -166,6 +158,6 @@ def call_operation():
             # Return the result as a JSON response
         return {'outputImages': result_image_list}
 
-    except Exception as e:
-        return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500
+    # except Exception as e:
+    #     return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500
     
