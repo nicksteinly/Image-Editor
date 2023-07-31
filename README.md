@@ -4,7 +4,6 @@ Computer Vision based image editor
 
 TODO:
 
-- \*\* if an image gets grayscaled, you must put it back in color so dimensions of image are 3 not 2
 - some images work for returning the parameter dependent operations other throw "cannot unpack non-iterable Response object"
 - fix the file/path assumption in Operations.py
 - test all parameters inputs for operations
