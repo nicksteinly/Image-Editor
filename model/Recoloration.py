@@ -18,10 +18,13 @@ def hex_to_bgr(hex_color):
 def recolor_white_pixels(hex_color, image_input):
      # Convert hex color to RGB
     bgr_color = hex_to_bgr(hex_color)
+    print(type(image_input))
+    print(len(image_input))
+    print(np.shape(image_input))
 
     # Flatten the image array to 2D with 3 columns (RGB)
     flatted_image_array = image_input.reshape(-1, 3)
-
+    print(np.shape(flatted_image_array))
     # Get the indices of white pixels
     white_pixels_indices = np.all(flatted_image_array == [255, 255, 255], axis=1)
 
@@ -32,7 +35,7 @@ def recolor_white_pixels(hex_color, image_input):
     modified_image = flatted_image_array.reshape(image_input.shape)
 
     output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/recolored-white-pixels.png'
-    cv2.imwrite(output_image_path, image_input)
+    cv2.imwrite(output_image_path, modified_image)
     _, encoded_image = cv2.imencode('.png', modified_image)
     base64_string = base64.b64encode(encoded_image).decode('utf-8')
     return image_input, base64_string
