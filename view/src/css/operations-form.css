@@ -1,0 +1,9 @@
+#operations-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align at the top */
+    align-items: center;
+    width: 100%;
+    height: 100%; /* Occupies the full height of the parent */
+    text-align: center;
+}

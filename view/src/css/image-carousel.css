@@ -1,35 +1,33 @@
-.image-carousel {
+#image-carousel-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 300px;
-  height:300px;
 }
 
-.carousel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height:100%;
-  transition: all 0.5s;
+#image-carousel {
+  max-height: 500px;
+  max-width: 500px;
 }
 
-.prev-button,
-.next-button {
+.slick-arrow {
+  position: absolute;
   top: 50%;
-  padding: 10px;
-  background-color: #ccc;
-  border: none;
-  font-size: 20px;
+  transform: translateY(-50%);
+  width: 40px; /* Adjust the width as needed */
+  height: 40px; /* Adjust the height as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3); /* Optional: Set a background color */
+  color: #fff; /* Optional: Set the arrow color */
   cursor: pointer;
+  z-index: 1;
 }
 
-.prev-button {
-  left: 0;
+.custom-prev-arrow {
+  left: -50px; /* Adjust the distance from the left side of the container */
 }
 
-.next-button {
-  right: 0;
+.custom-next-arrow {
+  right: -50px; /* Adjust the distance from the right side of the container */
 }

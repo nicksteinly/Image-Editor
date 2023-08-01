@@ -4,6 +4,7 @@ import { useOperation } from '../context/OperationProvider';
 import {Accordion} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../css/operations-form.css';
 
 export const OperationForm = () => {
   const operations = useOperation().operations;
@@ -19,7 +20,7 @@ export const OperationForm = () => {
   };
 
   return (
-    <div>
+    <div id='operations-form-container'>
       <h2>Operations</h2>
       <Accordion>
       {operations?.map((operation, index) => (

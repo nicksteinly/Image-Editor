@@ -13,6 +13,7 @@ export const OperationProvider = ({ children }) => {
   const [operations, setOperations] = useState([]);
   const [addedOperations, setAddedOperations] = useState([]);
   const [addedOperationsJSON, setAddedOperationsJSON] = useState([]);
+  const [imagesData, setImagesData] = useState([]);
 
   useEffect(() => {
     // Define an asynchronous function inside useEffect
@@ -53,8 +54,12 @@ export const OperationProvider = ({ children }) => {
     setAddedOperationsJSON({addedOperationsJSON});
   };
 
+  const updateImagesData = (imagesData) => {
+    setImagesData(imagesData);
+  };
+
   return (
-    <OperationContext.Provider value={{ operations, addOperation, removeOperation, addedOperations, addedOperationsJSON }}>
+    <OperationContext.Provider value={{ operations, addOperation, removeOperation, addedOperations, addedOperationsJSON, imagesData, updateImagesData }}>
       {children}
     </OperationContext.Provider>
   );
