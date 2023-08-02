@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { OperationsController } from '../controller/OperationsController';
 import { useOperation } from '../context/OperationProvider';
 import {Button} from 'react-bootstrap';
-import {ImageCarousel} from './ImageCarousel.component';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {InputGroup} from 'react-bootstrap';
 import '../../css/added-operation-list.css';
 
 const operationBaseURL = 'http://127.0.0.1:5000/operations';
@@ -28,19 +27,21 @@ export const AddedOperationList = () => {
 
   return (
     <div id="added-operations-list">
-      <h2>Added Operations List</h2>
+      <h2>Selected Operations</h2>
       {console.log(addedOperations)}
       <ol>
         {addedOperations?.map((operation, index) => (
           <div key={index}>
             <li >{operation}</li>
-            <Button onClick={() => removeOperation(index)}>Remove</Button>
+            <Button variant="outline-primary" onClick={() => removeOperation(index)}>Remove</Button>
           </div>
         ))}
       </ol>
-      <input type='file' onChange={(e) => uploadImage(e.target.files[0])}>
-      </input>
-      <Button onClick={submit}>Submit</Button>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">Upload Image</label>
+          <input class="form-control" type="file" id="formFile"/>
+        </div>
+      <Button variant="outline-primary" onClick={submit}>Submit</Button>
     </div>
   );
 };

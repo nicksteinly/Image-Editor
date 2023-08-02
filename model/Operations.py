@@ -7,82 +7,75 @@ import numpy as np
 
 operations_bp = Blueprint('/operations', __name__)
 
-operations_json = [
-    { 
-        "type": "Edge Detection",
-        "name": "Canny Edge Detection",
-        "parameters": {
-        },
-        "description": "This is operation 1.",
-        'corresponding_function': "edge_detection_Canny"
+operations_json = {
+  "Edge Detection": [
+    {
+      "name": "Canny Edge Detection",
+      "parameters": {},
+      "description": "Detects and highlights edges in the image using the Canny edge detection algorithm.",
+      "corresponding_function": "edge_detection_Canny"
     },
     {
-        "type": "Edge Detection",
-        "name": "Outer Outline Detection",
-        "parameters": {
-        },
-        "description": "This is operation 2.",
-        'corresponding_function': "outer_outline_detection"
+      "name": "Outer Outline Detection",
+      "parameters": {},
+      "description": "Finds the outer outlines of objects in the image, emphasizing their contours.",
+      "corresponding_function": "outer_outline_detection"
     },
     {
-        "type": "Edge Detection",
-        "name": "Thickened Edges",
-        "parameters": {
-            "iterations": "int",
-            "kernel size": "int"
-        },
-        "description": "This is operation 3.",
-        'corresponding_function': "thickened_edges"
+      "name": "Dilate Edges",
+      "parameters": {
+        "Iterations": "int",
+        "Kernel Size": "int"
+      },
+      "description": "Thickens the edges in the image by applying dilation for a specified number of iterations.",
+      "corresponding_function": "thickened_edges"
+    }
+  ],
+  "Recoloration": [
+    {
+      "name": "Filter by Color",
+      "parameters": {
+        "Target Hex Color (excluding #)": "str",
+        "Threshold": "int"
+      },
+      "description": "Keeps only the pixels close to the target color within the specified threshold, filtering the rest.",
+      "corresponding_function": "filter_by_color"
     },
     {
-        "type": "Recoloration",
-        "name": "Filter by Color",
-        "parameters": {
-            "target hex color (don't include #))": "str",
-            "threshold": "int"
-        },
-        "description": "This is operation 4.",
-        'corresponding_function': "filter_by_color"
+      "name": "Filter out Color",
+      "parameters": {
+        "Target Hex Color (don't include #)": "str",
+        "Threshold": "int"
+      },
+      "description": "Removes pixels close to the target color from the image within the specified threshold.",
+      "corresponding_function": "filter_out_color"
     },
     {
-        "type": "Recoloration",
-        "name": "Filter out Color",
-        "parameters": {
-            "target hex color (don't include #))": "str",
-            "threshold": "int"
-        },
-        "description": "This is operation 5.",
-        'corresponding_function': "filter_out_color"
+      "name": "Recolor White Pixels",
+      "parameters": {
+        "Target Hex Color (excluding #)": "str"
+      },
+      "description": "Changes the color of white pixels in the image to the specified color.",
+      "corresponding_function": "recolor_white_pixels"
+    }
+  ],
+  "Background Removal": [
+    {
+      "name": "Remove Black Background",
+      "parameters": {},
+      "description": "Removes the black background from the image, creating a transparent PNG with only the foreground objects.",
+      "corresponding_function": "remove_black_background_to_png"
     },
     {
-        "type": "Recoloration",
-        "name": "Recolor White Pixels",
-        "parameters": {
-            "target hex color (don't include #))": "str"
-        },
-        "description": "This is operation 6.",
-        'corresponding_function': "recolor_white_pixels"
-    },
-    {
-        "type": "Background Removal",
-        "name": "Remove Black Background",
-        "parameters": {
-        },
-        "description": "This is operation 7.",
-        'corresponding_function': "remove_black_background_to_png"
-    },
-    {
-        "type": "Background Removal",
-        "name": "Overlay Image with Mask",
-        "parameters": {
-            "mask image path": "str"
-        },
-        "description": "This is operation 8.",
-        'corresponding_function': "overlay_image_with_mask"
+      "name": "Overlay Image with Mask",
+      "parameters": {
+        "Mask Image File Path": "str"
+      },
+      "description": "Overlays the image with the provided mask image, combining their content in a masked manner.",
+      "corresponding_function": "overlay_image_with_mask"
     }
   ]
-
-operation_names = [op['name'] for op in operations_json]
+}
 
 @operations_bp.route('/get_operations', methods=['GET'])
 def get_operations():
@@ -118,28 +111,33 @@ def retrieve_operation_description():
     
 @operations_bp.route('/call_operations', methods=['POST'])
 def call_operation():
-    # try:
+    try:
         data = request.json
         operations = data.get('operations')
-        print(data.get('inputImage'))
+        print(operations)
         image_input = cv2.imread("/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/" + data.get('inputImage'))
         result_image_list = []
         if operations is None:
             return jsonify({"error": "No operations found."}), 404
         
         for operation in operations:
-            if operation['name'] in operation_names is None :
-                return jsonify({"error": f"Operation '{operation}' not found."}), 404
+            operation_name = operation.get('name')
+            operation_type = operation.get('type')
+            type_entries = operations_json.get(operation_type, [])
+            json_entries = [type_entry for type_entry in type_entries if type_entry['name'] == operation_name]
 
-            json_entry = [entry for entry in operations_json if entry['name'] == operation['name']]
+            if not json_entries:
+                return jsonify({"error": f"Operation '{operation_name}' not found."}), 404
+
+            json_entry = json_entries[0]
             parameters = operation.get('parameters')
-            if len(parameters) != len(json_entry[0].get('parameters').keys()):
-                return jsonify({"error": f"Invalid parameters for operation '{operation}'."}), 404
+            if len(parameters) != len(json_entry.get('parameters').keys()):
+                return jsonify({"error": f"Invalid parameters for operation '{operation_name}'."}), 404
 
             # TODO: Check if parameters are of correct type
 
             # Assuming the corresponding_function is a string with the function name
-            corresponding_function_name = json_entry[0].get('corresponding_function')
+            corresponding_function_name = json_entry.get('corresponding_function')
 
             # Get the actual function object by name
             corresponding_function = globals().get(corresponding_function_name)
@@ -149,8 +147,8 @@ def call_operation():
 
             # Prepare a list of parameter values to pass to the function
             param_values = []
-            for param_name, expected_param_type in parameters.items():
-                param_value = operation.get('parameters').get(param_name)
+            for param_name, _ in json_entry.get('parameters').items():
+                param_value = parameters.get(param_name)
                 if param_value is None:
                     return jsonify({"error": f"Missing value for parameter '{param_name}'."}), 404
 
@@ -161,12 +159,14 @@ def call_operation():
             param_values.append(image_input)
             # Call the function with the parameter values
 
-            image_input , result_image_encoded = corresponding_function(*param_values)
-            #TODO change to numpy and use .tolist() to send in json
+            image_input, result_image_encoded = corresponding_function(*param_values)
+            # TODO: change image_input to the result of the function if it returns something other than the modified image.
+
+            # Append the resulting image to the list
             result_image_list.append(result_image_encoded)
-            # Return the result as a JSON response
+
+        # Return the result as a JSON response
         return {'outputImages': result_image_list}
 
-    # except Exception as e:
-    #     return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500
-    
+    except Exception as e:
+        return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500

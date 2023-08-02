@@ -5,6 +5,8 @@
 }
 
 #image-carousel {
+  min-width: 100px;
+  min-height: 100px;
   max-height: 500px;
   max-width: 500px;
 }

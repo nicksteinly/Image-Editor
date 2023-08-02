@@ -11,7 +11,7 @@ import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
 export const ImageCarousel = () => {
   const imagesData = useOperation().imagesData;
-
+  
   // Custom arrow components for previous and next navigation
   const PrevArrow = (props) => {
     const { onClick } = props;
