@@ -115,6 +115,7 @@ def call_operation():
         data = request.json
         operations = data.get('operations')
         print(operations)
+        print(data.get('inputImage'))
         image_input = cv2.imread("/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/" + data.get('inputImage'))
         result_image_list = []
         if operations is None:
