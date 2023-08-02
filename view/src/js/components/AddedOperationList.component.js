@@ -41,10 +41,10 @@ export const AddedOperationList = () => {
           </div>
         ))}
       </ol>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">Upload Image</label>
-          <input class="form-control" type="file" id="formFile" onChange={(e) => uploadImage(e.target.files[0])}/>
-        </div>
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Upload Image</label>
+        <input class="form-control" type="file" id="formFile" onChange={(e) => uploadImage(e.target.files[0])}/>
+      </div>
       <Button variant="outline-primary" onClick={submit}>Submit</Button>
     </div>
   );

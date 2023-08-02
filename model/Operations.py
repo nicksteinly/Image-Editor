@@ -69,7 +69,7 @@ operations_json = {
     {
       "name": "Overlay Image with Mask",
       "parameters": {
-        "Mask Image File Path": "str"
+        "Mask Image": "file" 
       },
       "description": "Overlays the image with the provided mask image, combining their content in a masked manner.",
       "corresponding_function": "overlay_image_with_mask"

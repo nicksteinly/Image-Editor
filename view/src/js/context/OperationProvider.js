@@ -52,12 +52,12 @@ export const OperationProvider = ({ children }) => {
     addedOperationsJSON.splice(index, 1);
     // Update the state with the modified array
     setAddedOperations(updatedOperations);
-    setAddedOperationsJSON({addedOperationsJSON});
+    setAddedOperationsJSON(addedOperationsJSON);
   };
 
   const updateImagesData = (imagesData) => {
     console.log(imagesData);
-    
+
     setImagesData(imagesData);
   };
 
