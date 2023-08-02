@@ -21,6 +21,7 @@ export const OperationForm = () => {
   return (
     <div id='operations-form-container'>
       <h2>Operations</h2>
+      <br/>
       <Accordion>
         {Object.entries(operationsJSON)?.map(([operationType, operationList], typeIndex) => (
           <Accordion.Item key={typeIndex} eventKey={typeIndex}>

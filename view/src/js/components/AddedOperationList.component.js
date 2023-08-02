@@ -28,12 +28,16 @@ export const AddedOperationList = () => {
   return (
     <div id="added-operations-list">
       <h2>Selected Operations</h2>
-      {console.log(addedOperations)}
+      <br/>
       <ol>
         {addedOperations?.map((operation, index) => (
           <div key={index}>
-            <li >{operation}</li>
-            <Button variant="outline-primary" onClick={() => removeOperation(index)}>Remove</Button>
+            <li >
+              {operation}
+              &nbsp;
+              <Button variant="outline-primary" onClick={() => removeOperation(index)}>Remove</Button>
+            </li>
+            <br/>
           </div>
         ))}
       </ol>
