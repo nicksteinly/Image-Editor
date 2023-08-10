@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { OperationsController } from '../controller/OperationsController';
+import React, { useState } from 'react';
 import { useOperation } from '../context/OperationProvider';
 import {Accordion} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';

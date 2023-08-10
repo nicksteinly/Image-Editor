@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { OperationsController } from '../controller/OperationsController';
 import { useOperation } from '../context/OperationProvider';
 import {Button} from 'react-bootstrap';
-import {InputGroup} from 'react-bootstrap';
 import '../../css/added-operation-list.css';
 
 const operationBaseURL = 'http://127.0.0.1:5000/operations';

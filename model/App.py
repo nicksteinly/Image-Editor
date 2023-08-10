@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
-from BackgroundRemoval import background_removal_bp
-from EdgeDetection import edge_detection_bp
-from ImageExtensionConversion import extension_conversion_bp
-from Recoloration import recoloration_bp
-from Operations import operations_bp
+from image_processing.BackgroundRemoval import background_removal_bp
+from image_processing.EdgeDetection import edge_detection_bp
+from image_processing.ImageExtensionConversion import extension_conversion_bp
+from image_processing.Recoloration import recoloration_bp
+from image_processing.Operations import operations_bp
 
 app = Flask(__name__)
 app.debug = True

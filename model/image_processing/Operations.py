@@ -1,8 +1,8 @@
 import cv2
 from flask import Flask, jsonify, request, Blueprint
-from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
-from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels, gaussian_blur, sharpen
-from BackgroundRemoval import remove_black_background_to_png, overlay_image_with_mask
+from image_processing.EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
+from image_processing.Recoloration import filter_by_color, filter_out_color, recolor_white_pixels, gaussian_blur, sharpen
+from image_processing.BackgroundRemoval import remove_black_background_to_png, overlay_image_with_mask
 import numpy as np
 
 operations_bp = Blueprint('/operations', __name__)

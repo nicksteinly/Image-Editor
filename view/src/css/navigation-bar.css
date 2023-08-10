@@ -1,0 +1,19 @@
+
+#side-nav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#side-item{
+  color: #bec2c4;
+  font-size: 20px;
+  margin: 1%;
+  text-decoration: none;
+}
+
+#side-item:hover{
+  color: #979a9c;
+  text-decoration: none;
+}
