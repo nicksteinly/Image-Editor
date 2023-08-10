@@ -1,10 +1,9 @@
 import cv2
 import numpy as np
 import base64
-from PIL import Image
+from PIL import Image, ImageFilter, ImageEnhance
 from flask import Blueprint
 from flask import jsonify, request
-import webcolors
 
 recoloration_bp = Blueprint('recoloration', __name__)
 
@@ -160,3 +159,37 @@ def filter_by_color(target_color_hex, threshold, image_input):
     except Exception as e:
         print("Error:", e)
         return jsonify({'error': 'Filtering by color failed'})
+    
+
+def gaussian_blur(radius, image_input):
+    # Apply Gaussian blur to the image
+    # The higher the radius, the more blurred the image will be
+    # The radius must be an odd integer because the center of the kernel is calculated at a single point, and an odd number ensures that there is a well-defined center.
+    # The third argument is the standard deviation (of kernel) in the X direction. If it is 0, it is calculated automatically based on the kernel size.
+    radius = int(radius)
+    blurred_image = cv2.GaussianBlur(image_input, (radius, radius), 0)
+
+    output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/gaussian-blur.png'
+    cv2.imwrite(output_image_path, blurred_image)
+    _, encoded_image = cv2.imencode('.png', blurred_image)
+    base64_string = base64.b64encode(encoded_image).decode('utf-8')
+
+    return blurred_image, base64_string
+
+def sharpen(amount, radius, image_input):
+    # Apply Gaussian blur (opposite of unblur) to simulate the original blurred image
+    print("amount: ", amount)
+    radius = int(radius)
+    amount = float(amount)
+    blurred_image = cv2.GaussianBlur(image_input, (radius, radius), 0)
+    
+    # Apply sharpening filter to enhance details and edges
+    sharpened_image = cv2.addWeighted(image_input, 1 + amount, blurred_image, -amount, 0)
+        
+
+    output_image_path = '/Users/nicholassteinly/Library/CloudStorage/OneDrive-DukeUniversity/portfolio/Image-Editor/view/src/resources/images/sharpen.png'
+    cv2.imwrite(output_image_path, sharpened_image)
+    _, encoded_image = cv2.imencode('.png', sharpened_image)
+    base64_string = base64.b64encode(encoded_image).decode('utf-8')
+
+    return sharpened_image, base64_string

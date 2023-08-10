@@ -1,7 +1,7 @@
 import cv2
 from flask import Flask, jsonify, request, Blueprint
 from EdgeDetection import edge_detection_Canny, outer_outline_detection, thickened_edges
-from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels
+from Recoloration import filter_by_color, filter_out_color, recolor_white_pixels, gaussian_blur, sharpen
 from BackgroundRemoval import remove_black_background_to_png, overlay_image_with_mask
 import numpy as np
 
@@ -57,7 +57,25 @@ operations_json = {
       },
       "description": "Changes the color of white pixels in the image to the specified color.",
       "corresponding_function": "recolor_white_pixels"
+    },
+    {
+      "name": "Gaussian Blur",
+      "parameters": {
+          "Radius (odd number)": "int"
+      },
+      "description": "Blurs the image using a Gaussian filter with the specified radius.",
+      "corresponding_function": "gaussian_blur"
+    },
+    {
+      "name": "Sharpen",
+      "parameters": {
+          "Amount (strength of effect)": "int",
+          "Radius (odd number)": "int"
+      },
+      "description": "Sharpens the image using a Gaussian filter with the specified radius and amount.",
+      "corresponding_function": "sharpen"
     }
+
   ],
   "Background Removal": [
     {
@@ -170,4 +188,5 @@ def call_operation():
         return {'outputImages': result_image_list}
 
     except Exception as e:
+        print(e)
         return jsonify({"error": "Error occurred while executing operations.", "details": str(e)}), 500
