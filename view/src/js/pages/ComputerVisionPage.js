@@ -1,8 +1,9 @@
 import React from 'react';
 import { HeaderComponent } from '../components/Header.component';
+import { NavLink } from 'react-router-dom';
 
 export const ComputerVisionPage = () => {
-
+  const BASE_URL = "/computer-vision";
   const pageContent = {
     margin: "0 10% 0 10%",
   }
@@ -43,7 +44,7 @@ export const ComputerVisionPage = () => {
         <p>
           <strong>4. Object Detection:</strong>
           <ul>
-            <li>Template Matching: Finding instances of a template within an image.</li>
+            <li><NavLink to={`${BASE_URL}/template-matching`}>Template Matching:</NavLink>Finding instances of a template within an image.</li>
             <li>Haar Cascade Detection: Using a trained classifier to detect objects using features like edges and corners.</li>
             <li>Histogram of Oriented Gradients (HOG): Extracting and analyzing gradients to detect objects.</li>
           </ul>

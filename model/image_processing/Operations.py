@@ -63,7 +63,7 @@ operations_json = {
       "parameters": {
           "Radius (odd number)": "int"
       },
-      "description": "Blurs the image using a Gaussian filter with the specified radius.",
+      "description": "Blurs the image using a Gaussian filter with the specified radius. Blurring can be beneficial to remove unnecessary details when do object detection.",
       "corresponding_function": "gaussian_blur"
     },
     {
